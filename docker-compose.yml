@@ -7,7 +7,12 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - netLecture
 
 volumes:
   mongo_data:
     driver: local
+networks:
+  netLecture:
+    driver: bridge
