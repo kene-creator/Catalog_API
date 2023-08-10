@@ -24,7 +24,7 @@ namespace Catalog_API.Controllers
         [HttpGet]
         public async Task<IEnumerable<ItemDto>> GetItemsAsync()
         {
-            var items = (await repository.GetItemsAsync()).Select(item => item.AsDto());
+            var items = (await repository.GetItemsAsync()).Select(item => item.AsItemDto());
             return items;
         }
 
@@ -37,7 +37,7 @@ namespace Catalog_API.Controllers
             {
                 return NotFound();
             }
-            return item.AsDto();
+            return item.AsItemDto();
         }
 
         // POST /items
@@ -52,7 +52,7 @@ namespace Catalog_API.Controllers
                 CreatedDate = DateTimeOffset.UtcNow
             };
             await repository.CreateItemAsync(item);
-            return CreatedAtAction(nameof(GetItemAsync), new { id = item.Id }, item.AsDto());
+            return CreatedAtAction(nameof(GetItemAsync), new { id = item.Id }, item.AsItemDto());
         }
 
         // PUT /items/{id}
