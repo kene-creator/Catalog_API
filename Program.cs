@@ -25,6 +25,7 @@ builder.Services.AddHealthChecks()
 
 // Add services to the container.
 builder.Services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
+builder.Services.AddSingleton<IUsersRepository<AuthenticationResult>, MongoDbUsersRepository>();
 builder.Services.AddSingleton<IMongoClient>(sp =>
         {
             // var configuration = sp.GetRequiredService<IConfiguration>().GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
@@ -36,6 +37,7 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
 builder.Services.AddControllers(options => {
     options.SuppressAsyncSuffixInActionNames = false;
 });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
