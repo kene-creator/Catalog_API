@@ -9,7 +9,7 @@ namespace Catalog_API.Dtos
     public record CreateItemDto
     {
         [Required]
-        public string Name { get; init; }
+        public required string Name { get; init; }
 
         [Required]
         [Range(1, 1000)]
