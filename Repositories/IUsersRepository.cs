@@ -31,5 +31,7 @@ namespace Catalog_API.Repositories
         bool VerifyPassword(string providedPassword, string actualPasswordHash);
 
         string GenerateJwtToken(User user);
+
+        Task<List<User>> GetAllUsersAsync();
     }
 }

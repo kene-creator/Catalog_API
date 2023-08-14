@@ -13,7 +13,7 @@ namespace Catalog_API.Entities
         public DateTime? UpdatedAt { get; init; }
         public required string Email { get; init; }
         public required string PasswordHash { get; set; }
-        public required string? EmailToken { get; init; }
+        public string? EmailToken { get; init; }
         public string? ResetToken { get; init; }
         public DateTime? ResetTokenExpiresAt { get; init; }
         public bool? EmailValid { get; init; }
