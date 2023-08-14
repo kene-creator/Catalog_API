@@ -70,6 +70,13 @@ namespace Catalog_API.Repositories
         return await usersCollection.Find(filter).SingleOrDefaultAsync();
     }
 
+    public async Task<List<User>> GetAllUsersAsync()
+    {
+        var filter = Builders<User>.Filter.Empty;
+        return await usersCollection.Find(filter).ToListAsync();
+    }
+
+
     public async Task UpdateUserAsync(User user)
     {
         var filter = filterBuilder.Eq(existingUser => existingUser.Id, user.Id);
@@ -118,7 +125,6 @@ namespace Catalog_API.Repositories
        return new JwtSecurityTokenHandler().WriteToken(token);
 
     }
-
     }
 
 
