@@ -6,6 +6,7 @@ using Catalog_API.Dtos.UserDtos;
 using Catalog_API.Entities;
 using Catalog_API.Enums;
 using Catalog_API.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog_API.Controllers
@@ -24,7 +25,8 @@ namespace Catalog_API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<CreateUserDto>> RegisterUserAsync(CreateUserDto createUserDto) {
 
-            var user = new User {
+            var user = new User
+            {
                 Id = Guid.NewGuid(),
                 Email = createUserDto.Email,
                 PasswordHash = createUserDto.Password,
@@ -63,6 +65,14 @@ namespace Catalog_API.Controllers
             }
 
             return user.AsUserDto();
+        }
+
+        [HttpGet("users")]
+        [Authorize]
+        public async Task<ActionResult<List<User>>> GetUsersAsync()
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+            return users;
         }
     }
 
