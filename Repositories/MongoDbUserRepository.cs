@@ -14,7 +14,7 @@ namespace Catalog_API.Repositories
 
     public class AuthenticationResult
 {
-    public User User { get; set; }
+    public  User User { get; set; }
     public string ErrorMessage { get; set; }
 }
   public class MongoDbUsersRepository : IUsersRepository<AuthenticationResult>
