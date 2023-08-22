@@ -1,10 +1,12 @@
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using Catalog_API.Data;
 using Catalog_API.Repositories;
 using Catalog_API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
@@ -15,6 +17,9 @@ using MongoDB.Driver;
 var builder = WebApplication.CreateBuilder(args);
 
 var mongoDbSettings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<ApiDbContext>(options => options.UseNpgsql(conn));
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
