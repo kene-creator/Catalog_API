@@ -11,7 +11,7 @@ namespace Catalog_API
 {
     public static class Extensions
     {
-        public static ItemDto AsItemDto(this Entities.Item item)
+        public static ItemDto AsItemDto(this Item item)
         {
             return new ItemDto
             {
