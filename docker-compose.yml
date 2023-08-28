@@ -10,7 +10,7 @@ services:
       - "8088:80"
     environment:
       - ConnectionStrings__DefaultConnection=${POSTGRES_CONNECTION_STRING}
-        - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=http://+:80
     networks:
       - netLecture
     depends_on:
@@ -30,6 +30,15 @@ services:
       - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  postgres_admin:
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    ports:
+      - "15432:80"
+    depends_on:
+      - postgres_db
 
   mongodb:
     image: mongo:latest
