@@ -23,7 +23,7 @@ namespace Catalog_API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<CreateUserDto>> RegisterUserAsync(CreateUserDto createUserDto) {
+        public async Task<ActionResult<CreateUserDto>> RegisterUserAsync([FromBody]CreateUserDto createUserDto) {
 
             var user = new User
             {
@@ -44,7 +44,7 @@ namespace Catalog_API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<LoginUserDto>> LoginAsync(LoginUserDto loginUserDto){
+        public async Task<ActionResult<LoginUserDto>> LoginAsync([FromBody]LoginUserDto loginUserDto){
          var user = await _userRepository.GetUserByEmailAsync(loginUserDto.Email);
 
          if(user != null && _userRepository.VerifyPassword(loginUserDto.Password, user.PasswordHash)) {
