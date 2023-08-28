@@ -47,7 +47,6 @@ builder.Services.AddControllers(options => {
     options.SuppressAsyncSuffixInActionNames = false;
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
     options => {
@@ -100,6 +99,8 @@ var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
                 };
 });
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 
