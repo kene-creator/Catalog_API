@@ -11,20 +11,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog_API.Controllers
 {
-     [ApiController]
-     [Route("auth")]
+    [ApiController]
+    [Route("auth")]
     public class AuthController : ControllerBase
     {
         private readonly IUsersRepository<AuthenticationResult> _userRepository;
 
-        public AuthController(IUsersRepository<AuthenticationResult>  userRepository)
+        public AuthController(IUsersRepository<AuthenticationResult> userRepository)
         {
             _userRepository = userRepository;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<CreateUserDto>> RegisterUserAsync([FromBody]CreateUserDto createUserDto) {
-
+        public async Task<ActionResult<CreateUserDto>> RegisterUserAsync([FromBody] CreateUserDto createUserDto)
+        {
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -33,31 +33,36 @@ namespace Catalog_API.Controllers
                 CreatedAt = DateTimeOffset.UtcNow,
                 FirstName = createUserDto.FirstName,
                 LastName = createUserDto.LastName,
-                Roles = new UserRole[] { UserRole.User } 
+                Roles = new UserRole[] { UserRole.User }
             };
             var registeredUser = await _userRepository.RegisterUserAsync(user);
 
-            if(registeredUser == null) {
+            if (registeredUser == null)
+            {
                 return BadRequest("Failed to register user");
             }
+
             return CreatedAtAction(nameof(GetUserAsync), new { id = user.Id }, user.AsUserDto());
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<LoginUserDto>> LoginAsync([FromBody]LoginUserDto loginUserDto){
-         var user = await _userRepository.GetUserByEmailAsync(loginUserDto.Email);
+        public async Task<ActionResult<LoginUserDto>> LoginAsync([FromBody] LoginUserDto loginUserDto)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(loginUserDto.Email);
 
-         if(user != null && _userRepository.VerifyPassword(loginUserDto.Password, user.PasswordHash)) {
+            if (user == null || !_userRepository.VerifyPassword(loginUserDto.Password, user.PasswordHash))
+            {
+                return BadRequest("Email or password incorrect");
+            }
+
             var token = _userRepository.GenerateJwtToken(user);
             return Ok(new { access_token = token, user });
-         }
-         return BadRequest("Email or password incorrect");   
         }
 
-        [HttpGet("user/{id}")]
-        public async Task<ActionResult<UserDto>> GetUserAsync(Guid id)
+        [HttpGet("user/{guid:guid}")]
+        public async Task<ActionResult<UserDto>> GetUserAsync(Guid guid)
         {
-            var user = await _userRepository.GetUserByIdAsync(id);
+            var user = await _userRepository.GetUserByIdAsync(guid);
 
             if (user == null)
             {
@@ -75,5 +80,4 @@ namespace Catalog_API.Controllers
             return users;
         }
     }
-
 }
