@@ -1,18 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Catalog_API.Enums;
 
 namespace Catalog_API.Entities
 {
     public record User
     {
-         public Guid Id { get; init; }
+        public Guid Id { get; init; }
         public DateTimeOffset CreatedAt { get; init; }
         public DateTime? UpdatedAt { get; init; }
         public required string Email { get; init; }
         public required string PasswordHash { get; set; }
+        public string RefreshToken { get; set; } = string.Empty;
         public string? EmailToken { get; init; }
         public string? ResetToken { get; init; }
         public DateTime? ResetTokenExpiresAt { get; init; }
