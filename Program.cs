@@ -111,6 +111,13 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "refreshToken";
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+    // Other options as needed
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
