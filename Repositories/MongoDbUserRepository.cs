@@ -167,6 +167,7 @@ namespace Catalog_API.Repositories
             {
                 HttpOnly = true,
                 Expires = refreshToken.Expires,
+                Path = "/"
             };
             response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
         }
@@ -183,8 +184,9 @@ namespace Catalog_API.Repositories
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = key,
                     ValidateIssuer = true,
+                    ValidIssuer = _configuration.GetSection("Jwt:Issuer").Value,
                     ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.FromSeconds(30)
                 };
 
                 // Validate the token and return true if valid
