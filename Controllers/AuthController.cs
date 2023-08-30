@@ -18,10 +18,13 @@ namespace Catalog_API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUsersRepository<AuthenticationResult> _userRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthController(IUsersRepository<AuthenticationResult> userRepository)
+        public AuthController(IUsersRepository<AuthenticationResult> userRepository,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost("register")]
@@ -59,6 +62,7 @@ namespace Catalog_API.Controllers
 
             var token = _userRepository.GenerateTokens(user);
             user.RefreshToken = token.RefreshToken;
+            await _userRepository.UpdateUserAsync(user);
             _userRepository.SetRefreshToken(new RefreshToken
             {
                 Token = token.RefreshToken,
@@ -88,12 +92,13 @@ namespace Catalog_API.Controllers
             var users = await _userRepository.GetAllUsersAsync();
             return users;
         }
-        
-        [HttpPost("refresh-token")]
+
+        [HttpGet("refresh-token")]
         public async Task<ActionResult<TokenDto>> RefreshTokenAsync()
         {
+            var request = _httpContextAccessor.HttpContext.Request.Cookies;
             // Get the refresh token from the HTTP request cookies
-            var refreshToken = Request.Cookies["refreshToken"];
+            var refreshToken = request["refreshToken"];
 
             if (string.IsNullOrEmpty(refreshToken))
             {
@@ -113,12 +118,17 @@ namespace Catalog_API.Controllers
 
             var newTokens = _userRepository.GenerateTokens(user);
 
+            _userRepository.SetRefreshToken(new RefreshToken
+            {
+                Token = newTokens.RefreshToken,
+                Expires = DateTime.UtcNow.AddDays(30) 
+            });
+            
             return Ok(new TokenDto
             {
                 AccessToken = newTokens.AccessToken,
                 RefreshToken = newTokens.RefreshToken
             });
         }
-
     }
 }
