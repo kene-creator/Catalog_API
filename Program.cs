@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Catalog_API.Data;
 using Catalog_API.Repositories;
+using Catalog_API.Services;
 using Catalog_API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -38,6 +39,7 @@ builder.Services.AddSingleton<IUsersRepository<AuthenticationResult>, MongoDbUse
 builder.Services.AddSingleton<IMongoClient>(sp =>
     new MongoClient(sp.GetRequiredService<IConfiguration>().GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>()
         ?.ConnectionString));
+builder.Services.AddScoped<ICacheService, CacheService>();
 
 
 builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
