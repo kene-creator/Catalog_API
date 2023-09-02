@@ -28,7 +28,7 @@ namespace Catalog_API.Controllers
         [HttpGet("getAllDrivers")]
         public async Task<ActionResult> Get()
         {
-            var cacheData = _cacheService.GetData<IEnumerable<Driver>>("Drivers");
+            var cacheData = _cacheService.GetData<IEnumerable<Driver>>("drivers");
             if (cacheData != null && cacheData.Count() < 0)
             {
                 return Ok(cacheData);
@@ -46,7 +46,7 @@ namespace Catalog_API.Controllers
 
             var expiryTime = DateTimeOffset.Now.AddMinutes(5);
             
-            _cacheService.SetData<IEnumerable<Driver>>("Drivers", allDrivers, expiryTime);
+            _cacheService.SetData<IEnumerable<Driver>>("drivers", allDrivers, expiryTime);
             return Ok(allDrivers);
         }
     }
