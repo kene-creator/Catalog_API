@@ -23,6 +23,8 @@
     </PackageReference>
     <PackageReference Include="MongoDB.Driver" Version="2.20.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLog" Version="5.2.5" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.3.5" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />

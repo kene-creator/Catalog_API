@@ -121,9 +121,9 @@ namespace Catalog_API.Controllers
             _userRepository.SetRefreshToken(new RefreshToken
             {
                 Token = newTokens.RefreshToken,
-                Expires = DateTime.UtcNow.AddDays(30) 
+                Expires = DateTime.UtcNow.AddDays(30)
             });
-            
+
             return Ok(new TokenDto
             {
                 AccessToken = newTokens.AccessToken,

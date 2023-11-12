@@ -1,12 +1,14 @@
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using Catalog_API;
 using Catalog_API.Data;
 using Catalog_API.Repositories;
 using Catalog_API.Services;
 using Catalog_API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -14,6 +16,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,11 @@ builder.Services.AddHealthChecks()
         timeout: TimeSpan.FromSeconds(3),
         tags: new[] { "ready" }
     );
+
+builder.Services.ConfigureCors();
+builder.Services.ConfigureIISIntegration();
+
+builder.Services.ConfigureLoggerService();
 
 // Add services to the container.
 builder.Services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
@@ -120,6 +128,10 @@ builder.Services.ConfigureApplicationCookie(options =>
     // Other options as needed
 });
 
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
+    "/nlog.config"));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -130,9 +142,18 @@ if (app.Environment.IsDevelopment())
 }
 
 if (app.Environment.IsDevelopment())
+    app.UseDeveloperExceptionPage();
+else
+    app.UseHsts();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-    app.UseHttpsRedirection();
-}
+    ForwardedHeaders = ForwardedHeaders.All
+});
+
+
+app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 
