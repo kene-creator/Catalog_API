@@ -128,8 +128,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     // Other options as needed
 });
 
-LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
-    "/nlog.config"));
+LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 
 var app = builder.Build();
