@@ -6,6 +6,7 @@ using Catalog_API.Dtos.TokenDtos;
 using Catalog_API.Dtos.UserDtos;
 using Catalog_API.Entities;
 using Catalog_API.Enums;
+using Catalog_API.Interface;
 using Catalog_API.Repositories;
 using Catalog_API.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -19,12 +20,14 @@ namespace Catalog_API.Controllers
     {
         private readonly IUsersRepository<AuthenticationResult> _userRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILoggerManager _logger;
 
         public AuthController(IUsersRepository<AuthenticationResult> userRepository,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, ILoggerManager logger)
         {
             _userRepository = userRepository;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         [HttpPost("register")]
