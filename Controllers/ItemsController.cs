@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalog_API.Dtos;
 using Catalog_API.Entities;
+using Catalog_API.Interface;
 using Catalog_API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +15,12 @@ namespace Catalog_API.Controllers
     public class ItemsController : ControllerBase
     {
         private readonly IItemsRepository repository;
+        private readonly ILoggerManager _logger;
 
-        public ItemsController(IItemsRepository repository)
+        public ItemsController(IItemsRepository repository, ILoggerManager logger)
         {
             this.repository = repository;
+            _logger = logger;
         }
 
         // GET /items
